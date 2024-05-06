@@ -3,7 +3,6 @@ package ru.netology.cloudStorage.service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import ru.netology.cloudStorage.dto.FileDto;
 import ru.netology.cloudStorage.entity.File;
 import ru.netology.cloudStorage.entity.User;
 import ru.netology.cloudStorage.repository.FileRepository;
@@ -14,6 +13,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 public class FileServiceTest {
+    public static final Long VALID_FILE_ID = 1L;
     public static final String EXISTING_FILE_NAME = "existingFile";
     public static final String NON_EXISTING_FILE_NAME = "nonExistingFile";
 
@@ -91,8 +91,12 @@ public class FileServiceTest {
 
     @Test
     void getFileList() {
-        final List<FileDto> expectedFileList = List.of(new FileDto(EXISTING_FILE_NAME, 3));
-        final List<FileDto> actualFileList = fileService.getAllFiles(existingUser, 1);
+        final byte[] expectedFileContent = new byte[]{0, 1, 2};
+        final File expectedFile = new File(VALID_FILE_ID, EXISTING_FILE_NAME,
+                expectedFileContent, existingUser);
+        final List<File> expectedFileList = List.of(expectedFile);
+
+        final List<File> actualFileList = fileService.getAllFiles(existingUser, 1);
         Assertions.assertEquals(expectedFileList, actualFileList);
     }
 }

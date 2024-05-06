@@ -1,5 +1,6 @@
 package ru.netology.cloudStorage.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/file")
 @Validated
@@ -40,8 +42,10 @@ public class FileController {
                                         @RequestParam("filename") @NotBlank String filename,
                                         @RequestBody @NotNull MultipartFile file) throws IOException {
 
+        log.info("Try to upload file");
         User user = authenticationService.getUserByToken(authToken);
         fileService.addFile(filename, file.getBytes(), user);
+        log.info("User with login: {} uploaded file with name: {}", user.getLogin(), filename);
         return new ResponseEntity("Success upload", HttpStatus.OK);
     }
 
@@ -49,8 +53,10 @@ public class FileController {
     public ResponseEntity<?> deleteFile(@RequestHeader("auth-token") @NotBlank String authToken,
                                         @RequestParam("filename") @NotBlank String filename) {
 
+        log.info("Try to delete file");
         User user = authenticationService.getUserByToken(authToken);
         fileService.deleteFile(filename, user);
+        log.info("User with login: {} deleted file with name: {}", user.getLogin(), filename);
         return new ResponseEntity("Success deleted", HttpStatus.OK);
     }
 
@@ -58,16 +64,23 @@ public class FileController {
     public ResponseEntity<?> renameFile(@RequestHeader("auth-token") @NotBlank String authToken,
                                         @RequestParam("filename") @NotBlank String filename,
                                         @Valid @RequestBody FileNameDto newFilename) {
+
+        log.info("Try to rename file");
         User user = authenticationService.getUserByToken(authToken);
         String newName = newFilename.getFilename();
         fileService.renameFile(filename, user, newName);
+        log.info("User with login: {} renamed file from old name: {} to new name: {}",
+                user.getLogin(), filename, newName);
         return new ResponseEntity("Success renamed", HttpStatus.OK);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] getFile(@RequestHeader("auth-token") @NotBlank String authToken,
                           @NotBlank String filename) {
+
+        log.info("Try to download file");
         User user = authenticationService.getUserByToken(authToken);
+        log.info("User with login: {} downloaded file with name: {}", user.getLogin(), filename);
         return fileService.downloadFile(filename, user);
     }
 }

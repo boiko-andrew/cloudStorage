@@ -8,17 +8,16 @@ services:
       - default
     environment:
       spring.datasource.url: jdbc:postgresql://db:5432/cloudStorage
-      spring.jpa.showSql: true
+      spring.jpa.showSql: false
       spring.sql.init.mode: always
 
-#      spring.servlet.multipart.max-file-size: 50MB
-#      spring.servlet.multipart.max-request-size: 50MB
+      spring.servlet.multipart.max-file-size: 50MB
+      spring.servlet.multipart.max-request-size: 50MB
     ports:
       - "8082:8081"
     depends_on:
       - db
   db:
-#    restart: always
     image: "postgres:15-alpine"
     container_name: db
     networks:
@@ -27,8 +26,6 @@ services:
       POSTGRES_DB: "cloudStorage"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
-#      - listen_addresses = '*'
-#      PORT: 5432
     ports:
       - "5432:5432"
 

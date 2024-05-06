@@ -1,13 +1,9 @@
 package ru.netology.cloudStorage.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,13 +17,12 @@ public class User {
     @Column(nullable = false, unique = true)
     private Long id;
 
+    @Getter
     @Column(nullable = false, unique = true)
     private String login;
 
+    @Getter
     @Column(nullable = false)
     private String password;
 
-//    @OneToMany
-//    @JoinColumn(name = "userId")
-//    private List<File> fileList;
 }
